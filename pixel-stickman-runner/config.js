@@ -10,7 +10,7 @@ window.PSR_CONFIG = {
   scorePerPx: 0.1,
   breakBonus: 50,                        // điểm khi phá chướng ngại
   spawn: { gapMin: 0.85, gapMax: 1.7, doubleChance: 0.45, doubleGap: 0.8 }, // gap tính theo giây * tốc độ
-  power: { checkEvery: 5, chance: 0.35, minDist: 200, darts: 3, startDarts: 100, slowTime: 6, slowFactor: 0.55, superTime: 5 },
+  power: { checkEvery: 5, chance: 0.8, minDist: 200, darts: 3, startDarts: 100, slowTime: 6, slowFactor: 0.55, superTime: 5 },
   dart: { speed: 420, cooldown: 0.25 },
   env: { dayLength: 120, seasonLength: 240, demoScale: 40 }, // giây / 1 ngày, giây / 4 mùa; demoScale = tốc độ trôi ở menu
   gameOverDelay: 1.4,
