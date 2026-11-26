@@ -1,0 +1,87 @@
+/* ====== Giao diện pixel cho Pixel Stickman Runner ====== */
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+body { -webkit-user-select: none; user-select: none; touch-action: none; -webkit-tap-highlight-color: transparent; font-family: "Courier New", Courier, monospace; color: #fff; }
+button { font-family: inherit; cursor: pointer; outline: none; -webkit-appearance: none; appearance: none; }
+.hidden { display: none !important; }
+
+#stage { position: absolute; left: 50%; top: 50%; width: 960px; height: 540px; transform-origin: center center; overflow: hidden; background: #111; }
+#cv { display: block; width: 960px; height: 540px; image-rendering: pixelated; image-rendering: crisp-edges; }
+img { image-rendering: pixelated; image-rendering: crisp-edges; -webkit-user-drag: none; }
+
+/* chữ viền đen kiểu game */
+.outline, #hud-score, #hud-high, #hud-combo, h1, h2, .chip b, #over-score, #over-new, .hint { text-shadow: 3px 3px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000; }
+
+/* ---- HUD ---- */
+#hud { position: absolute; inset: 0; pointer-events: none; }
+#hud-left { position: absolute; left: 22px; top: 14px; }
+#hud-score { font-size: 46px; font-weight: bold; line-height: 1; letter-spacing: 2px; }
+#hud-high { font-size: 18px; color: #ffe27a; margin-top: 4px; }
+.chips { display: flex; gap: 10px; margin-top: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; background: rgba(10, 12, 30, 0.55); border: 3px solid #000; border-radius: 10px; padding: 3px 10px; font-size: 20px; }
+.chip img { height: 24px; width: auto; }
+.chip.big { font-size: 24px; padding: 5px 14px; } .chip.big img { height: 30px; }
+#hud-combo { position: absolute; left: 0; right: 0; top: 74px; text-align: center; font-size: 40px; font-weight: bold; color: #ffd84a; opacity: 0; transition: opacity .2s; }
+#hud-combo.show { opacity: 1; animation: pop .25s; }
+@keyframes pop { 0% { transform: scale(1.6); } 100% { transform: scale(1); } }
+#btn-pause { position: absolute; right: 22px; top: 16px; pointer-events: auto; display: flex; gap: 8px; align-items: center; justify-content: center; }
+#btn-pause i { display: block; width: 8px; height: 26px; background: #fff; border: 2px solid #000; }
+
+/* ---- nút vuông bo góc (nhảy / trượt) ---- */
+.sq { position: relative; width: 124px; height: 124px; border-radius: 20px; background: rgba(20, 26, 52, 0.6); border: 5px solid rgba(255, 255, 255, 0.9); box-shadow: 0 6px 0 rgba(0, 0, 0, 0.55); padding: 0; color: #fff; pointer-events: auto; touch-action: none; }
+.sq.small { width: 64px; height: 64px; border-radius: 14px; border-width: 4px; }
+.sq svg { width: 62px; height: 62px; }
+.sq.down, .sq:active { background: rgba(255, 216, 74, 0.55); transform: translateY(4px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.55); }
+.key { position: absolute; right: 8px; bottom: 4px; font-style: normal; font-weight: bold; font-size: 22px; color: #fff; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; }
+#controls { position: absolute; left: 26px; bottom: 26px; display: flex; gap: 18px; }
+#controls .sq { display: flex; align-items: center; justify-content: center; }
+
+/* ---- nút kĩ năng tròn (bên phải, xếp dọc) ---- */
+#skills { position: absolute; right: 30px; bottom: 26px; display: flex; flex-direction: column-reverse; gap: 22px; }
+.skill { position: relative; width: 104px; height: 104px; border-radius: 50%; border: 0; padding: 0; background: transparent; pointer-events: auto; touch-action: none; }
+.skill .ico { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; border: 5px solid #fff; background: #222; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.55); }
+.skill .ico img { width: 100%; height: 100%; display: block; }
+.skill.off .ico { filter: grayscale(1) brightness(0.8); opacity: 0.45; }
+.skill:active .ico, .skill.down .ico { transform: translateY(4px); }
+.skill .cnt { position: absolute; left: -10px; top: -10px; min-width: 34px; height: 34px; line-height: 34px; text-align: center; border-radius: 17px; background: #000; color: #ffe27a; font-size: 22px; border: 3px solid #fff; box-sizing: border-box; padding: 0 5px; }
+.skill .key { right: -4px; bottom: -6px; }
+.skill .ring { position: absolute; inset: -9px; border-radius: 50%; opacity: 0; -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px)); mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px)); background: conic-gradient(#ffd84a calc(var(--p, 0) * 1%), transparent 0); }
+.skill.active .ring { opacity: 1; }
+.skill.shake { animation: shake .25s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---- màn hình / bảng ---- */
+.screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.screen.dim { background: rgba(0, 0, 0, 0.55); }
+.topbar { position: absolute; left: 22px; right: 22px; top: 16px; display: flex; justify-content: space-between; }
+h1 { margin: 0 0 14px; font-size: 62px; line-height: 1.05; text-align: center; color: #ffd84a; letter-spacing: 3px; text-shadow: 5px 5px 0 #c1272d, 7px 7px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000; }
+h2 { margin: 0; font-size: 34px; color: #ffd84a; }
+h2.big { font-size: 64px; margin-bottom: 14px; } h2.red { color: #ff5a4a; }
+.btn { position: relative; min-width: 360px; margin: 9px; padding: 13px 34px; font-size: 32px; font-weight: bold; color: #2a1a00; background: #ffd84a; border: 5px solid #000; border-radius: 6px; box-shadow: 0 7px 0 #000, inset 0 -6px 0 rgba(0, 0, 0, 0.18), inset 0 4px 0 rgba(255, 255, 255, 0.4); }
+.btn:active { transform: translateY(5px); box-shadow: 0 2px 0 #000, inset 0 -6px 0 rgba(0, 0, 0, 0.18); }
+.btn.blue { background: #5ab0ff; color: #04223f; } .btn.green { background: #6fe06a; color: #06300a; } .btn.red { background: #ff6b5a; color: #3a0600; } .btn.gray { background: #cfd5e6; color: #1b2033; }
+.btn.small { min-width: 0; font-size: 22px; padding: 8px 18px; border-width: 4px; margin: 6px; }
+.btn[disabled] { filter: grayscale(0.9); opacity: 0.55; cursor: default; }
+.row { display: flex; }
+.badge { position: absolute; right: -14px; top: -16px; width: 36px; height: 36px; line-height: 36px; border-radius: 50%; background: #ff3b30; color: #fff; border: 4px solid #000; font-size: 24px; text-align: center; }
+.hint { margin: 10px 0 0; font-size: 17px; color: #fff; text-align: center; }
+
+.panel { width: 800px; max-height: 500px; box-sizing: border-box; padding: 18px 24px 14px; background: #1f2440; border: 6px solid #000; box-shadow: inset 0 0 0 4px #4a5280; display: flex; flex-direction: column; align-items: center; }
+.panel-head { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.tabs { display: flex; gap: 10px; margin: 4px 0 8px; }
+.tab { font-size: 22px; font-weight: bold; padding: 6px 22px; background: #39406a; color: #cfd5e6; border: 4px solid #000; border-radius: 6px; }
+.tab.on { background: #ffd84a; color: #2a1a00; }
+.list { width: 100%; flex: 1; overflow-y: auto; max-height: 330px; touch-action: pan-y; -webkit-overflow-scrolling: touch; }
+.item { display: flex; align-items: center; gap: 16px; background: #2b3260; border: 4px solid #000; border-radius: 8px; padding: 6px 14px; margin-bottom: 6px; }
+.item .pv, .item img.pv { width: 58px; height: 58px; image-rendering: pixelated; flex: none; }
+.item .pv.round { border-radius: 50%; border: 4px solid #fff; box-sizing: border-box; }
+.item .info { flex: 1; font-size: 22px; line-height: 1.25; } .item .info small { display: block; font-size: 16px; color: #aab3d6; }
+.item .btn { margin: 0; min-width: 150px; font-size: 22px; padding: 8px 12px; border-width: 4px; }
+.bar { height: 14px; background: #10132a; border: 3px solid #000; margin-top: 4px; } .bar i { display: block; height: 100%; background: #6fe06a; }
+
+#over-score { font-size: 72px; font-weight: bold; color: #fff; line-height: 1; }
+#over-new { font-size: 26px; color: #ffd84a; margin-top: 8px; }
+#over-stats { margin: 12px 0 10px; font-size: 22px; line-height: 1.5; text-align: center; text-shadow: 2px 2px 0 #000; }
+
+#toast { position: absolute; left: 50%; bottom: 150px; transform: translateX(-50%); background: rgba(0, 0, 0, 0.8); border: 3px solid #fff; border-radius: 10px; padding: 8px 20px; font-size: 22px; opacity: 0; transition: opacity .25s; pointer-events: none; white-space: nowrap; }
+#toast.show { opacity: 1; }
+#loading { position: absolute; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 20; }

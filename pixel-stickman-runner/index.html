@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pixel Stickman Runner</title>
+<link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv" width="480" height="270"></canvas>
+
+  <!-- HUD khi đang chơi -->
+  <div id="hud" class="hidden">
+    <div id="hud-left">
+      <div id="hud-score">0</div>
+      <div id="hud-high">KỈ LỤC 0</div>
+      <div class="chips">
+        <span class="chip"><img data-asset="item_coin" alt=""><b id="hud-coin">0</b></span>
+        <span class="chip"><img data-asset="item_star" alt=""><b id="hud-star">0</b></span>
+        <span class="chip"><b id="hud-season"></b></span>
+      </div>
+    </div>
+    <div id="hud-combo"></div>
+    <button id="btn-pause" class="sq small" aria-label="Tạm dừng"><i></i><i></i></button>
+  </div>
+
+  <!-- 2 nút nhảy / trượt (dưới trái) -->
+  <div id="controls" class="hidden">
+    <button id="btn-jump" class="sq" aria-label="Nhảy">
+      <svg viewBox="0 0 24 24"><path d="M12 3 L22 15 H15.5 V22 H8.5 V15 H2 Z" fill="#fff" stroke="#000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <em class="key">W</em>
+    </button>
+    <button id="btn-slide" class="sq" aria-label="Trượt">
+      <svg viewBox="0 0 24 24" style="transform:rotate(180deg)"><path d="M12 3 L22 15 H15.5 V22 H8.5 V15 H2 Z" fill="#fff" stroke="#000" stroke-width="2" stroke-linejoin="round"/></svg>
+      <em class="key">S</em>
+    </button>
+  </div>
+
+  <!-- 3 nút kĩ năng (bên phải, xếp dọc) -->
+  <div id="skills" class="hidden">
+    <button class="skill" data-skill="shuriken"><span class="ring"></span><span class="ico"><img data-asset="icon_shuriken" alt=""></span><b class="cnt">0</b><em class="key">F</em></button>
+    <button class="skill" data-skill="giant"><span class="ring"></span><span class="ico"><img data-asset="icon_giant" alt=""></span><b class="cnt">0</b><em class="key">G</em></button>
+    <button class="skill" data-skill="shield"><span class="ring"></span><span class="ico"><img data-asset="icon_shield_magnet" alt=""></span><b class="cnt">0</b><em class="key">H</em></button>
+  </div>
+
+  <!-- Màn hình chính -->
+  <div id="scr-menu" class="screen hidden">
+    <div class="topbar">
+      <span class="chip big"><img data-asset="item_coin" alt=""><b id="menu-coin">0</b></span>
+      <span class="chip big"><b id="menu-high">KỈ LỤC 0</b></span>
+    </div>
+    <h1 id="menu-title">PIXEL<br>STICKMAN RUNNER</h1>
+    <button class="btn" id="btn-play">CHƠI</button>
+    <button class="btn blue" id="btn-shop">CỬA HÀNG</button>
+    <button class="btn green" id="btn-quests">NHIỆM VỤ<span class="badge hidden" id="quest-badge">!</span></button>
+    <div class="row">
+      <button class="btn small gray" id="btn-sfx">ÂM THANH: BẬT</button>
+      <button class="btn small gray hidden" id="btn-music">NHẠC: BẬT</button>
+    </div>
+    <p class="hint" id="menu-hint">W / Space = nhảy · S = trượt · F / G / H = kĩ năng · Esc = tạm dừng</p>
+  </div>
+
+  <!-- Cửa hàng -->
+  <div id="scr-shop" class="screen hidden">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>CỬA HÀNG</h2>
+        <span class="chip big"><img data-asset="item_coin" alt=""><b id="shop-coin">0</b></span>
+      </div>
+      <div class="tabs"><button class="tab on" data-tab="items">VẬT PHẨM</button><button class="tab" data-tab="skins">SKIN</button></div>
+      <div id="shop-list" class="list"></div>
+      <button class="btn small gray" id="btn-shop-back">← QUAY LẠI</button>
+    </div>
+  </div>
+
+  <!-- Nhiệm vụ -->
+  <div id="scr-quests" class="screen hidden">
+    <div class="panel">
+      <div class="panel-head"><h2>NHIỆM VỤ HẰNG NGÀY</h2><span class="chip big"><img data-asset="item_coin" alt=""><b id="quest-coin">0</b></span></div>
+      <div id="quest-list" class="list"></div>
+      <p class="hint">Nhiệm vụ làm mới mỗi ngày.</p>
+      <button class="btn small gray" id="btn-quests-back">← QUAY LẠI</button>
+    </div>
+  </div>
+
+  <!-- Tạm dừng -->
+  <div id="scr-pause" class="screen dim hidden">
+    <h2 class="big">TẠM DỪNG</h2>
+    <button class="btn" id="btn-resume">TIẾP TỤC</button>
+    <button class="btn red" id="btn-home">VỀ MÀN HÌNH CHÍNH</button>
+  </div>
+
+  <!-- Thua -->
+  <div id="scr-over" class="screen dim hidden">
+    <h2 class="big red">GAME OVER</h2>
+    <div id="over-score">0</div>
+    <div id="over-new" class="hidden">★ KỈ LỤC MỚI! ★</div>
+    <div id="over-stats"></div>
+    <button class="btn" id="btn-again">CHƠI LẠI</button>
+    <div class="row">
+      <button class="btn small blue" id="btn-over-shop">CỬA HÀNG</button>
+      <button class="btn small gray" id="btn-over-home">MÀN HÌNH CHÍNH</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <div id="loading">ĐANG TẢI...</div>
+</div>
+
+<!--SCRIPTS-->
+<script src="config/config.js"></script>
+<script src="src/util.js"></script>
+<script src="src/save.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/assets.js"></script>
+<script src="src/world.js"></script>
+<script src="src/entities.js"></script>
+<script src="src/player.js"></script>
+<script src="src/quests.js"></script>
+<script src="src/shop.js"></script>
+<script src="src/ui.js"></script>
+<script src="src/game.js"></script>
+<!--/SCRIPTS-->
+</body>
+</html>
